@@ -1,3 +1,10 @@
+// Learned from and References:
+//revised from
+// https://bl.ocks.org/mbostock/6320825
+// https://bl.ocks.org/mbostock/6320825
+// https://plot.ly/javascript/choropleth-maps/
+
+
 
 d3.json("policyIndex.json", function(err, data) {
 
