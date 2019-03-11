@@ -14,10 +14,12 @@
 d3.json("policyIndex.json", function(err,data) {
   /* Format Data */
   var parseDate = d3.timeParse("%Y");
+
   data.forEach(function(d) { 
     // console.log(d)
     d.date = parseDate(d.Year);
-    d.snapIndex = +d["Weighted SNAP policy index"];    
+
+    d.snapIndex = +d["Unweighted SNAP policy index"];    
     
   });
 
@@ -36,7 +38,7 @@ d3.json("policyIndex.json", function(err,data) {
 
 
 var width = 500;
-var height = 300;
+var height = 400;
 var margin = 50;
 var duration = 250;
 
@@ -47,10 +49,15 @@ var lineStroke = "1.5px";
 var lineStrokeHover = "2.5px";
 
 /* Scale */
-var xScale = d3.scaleTime()
-  .domain(d3.extent(data, d => new Date(d.date).getUTCFullYear()))
-  .range([0, width-margin]);
+var xValue = function(d) { return new Date(d.date).getUTCFullYear()}, // data -> value
+    xScale = d3.scaleLinear().range([0,width]); 
 
+xScale.domain([d3.min(data, xValue)+22, d3.max(data, xValue)+10]);
+
+// var xScale = d3.scaleTime()
+//   .domain(d3.extent(data, d => new Date(d.date).getUTCFullYear()))
+//   .range([0, width-margin]);
+//console.log(xScale)
 var yScale = d3.scaleLinear()
   .domain([0, d3.max(data, d => d.snapIndex)])
   .range([height-margin, 0]);
@@ -70,7 +77,7 @@ var line = d3.line()
   .x(d => xScale(new Date(d.date).getUTCFullYear()))
   .y(d => {
     //console.log(d["Weighted SNAP policy index"], yScale(d["Weighted SNAP policy index"]))
-    return yScale(d["Weighted SNAP policy index"])
+    return yScale(d.snapIndex)
   });
 
 let lines = svg.append('g')
@@ -95,7 +102,7 @@ lines.selectAll('.line-group')
   .append('path')
   .attr('class', 'line')  
   .attr('d', d => {
-    //console.log(d)
+    
     return line(d)
   })
   .style('stroke', (d, i) => color(i))
@@ -120,8 +127,8 @@ lines.selectAll('.line-group')
 
 
 /* Add Axis into SVG */
-var xAxis = d3.axisBottom(xScale).ticks(5);
-var yAxis = d3.axisLeft(yScale).ticks(5);
+var xAxis = d3.axisBottom(xScale);
+var yAxis = d3.axisLeft(yScale);
 
 svg.append("g")
   .attr("class", "x axis")
@@ -135,7 +142,7 @@ svg.append("g")
   .attr("y", 15)
   .attr("transform", "rotate(-90)")
   .attr("fill", "#000")
-  .text("Total values");
+  .text("SNAP Policy index");
 
 
 });
