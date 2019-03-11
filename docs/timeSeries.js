@@ -10,6 +10,7 @@
 
 // still working on the label, scale and axis
 
+
 d3.json("policyIndex.json", function(err,data) {
   /* Format Data */
   var parseDate = d3.timeParse("%Y");

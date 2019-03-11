@@ -1,21 +1,4 @@
-.container {
-  width: 1200px;
-  height: 700px;
-  margin: 25px auto 25px auto;
-  padding: 50px 50px 50px 50px;
-  background-color: white;
-  position: relative;
-  box-shadow: 0 0 20px #ccc;
-}
-#footer {
-  border-top: 1px solid silver;
-  color: #888888;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 1rem;
-  padding: 0.5rem;
-}
-
+/* stylesheet for custom graph */
 
 body {
   background-color: #fff;
@@ -25,8 +8,8 @@ body {
 }
 
 h1 {
-  font-size: 24px;
-  margin: 0;
+  font-size: 30px;
+  margin: 100;
   color: #5387bd;
   font-weight: normal;
 }
@@ -40,43 +23,8 @@ p {
   color: #808080;
 }
 
-svg {
-  background-color: white;
-}
 
-#intro {
-  width: 740px;
-  line-height: 150%;
-}
 
-#area1 {
-  display: inline-block;
-/*  float: right;*/
-}
-
-#area2 {
-  display: inline-block;
-/*  float: left;*/
-}
-
-/*#footer {
-  clear: both;
-  width: 760px;
-  line-height: 150%;
-  font-size: 12px;
-}*/
-
-path {
-  stroke: #888;
-  stroke-width: 2;
-  opacity: 0.2;
-  -moz-transition: all 0.1s;
-  -o-transition: all 0.1s;
-  -webkit-transition: all 0.1s;
-  transition: all 0.1s;
-  cursor: pointer;
-  fill: none;
-}
 
 g.linklight path{
   stroke: #ff0000;
@@ -212,9 +160,23 @@ rect:hover {
   stroke: #fff;
   stroke-linejoin: round;
 }
+
 .states-choropleth {
-  fill: #ccc;
+  fill: #ef8f21;
 }
+
+.line {
+  stroke: #ccc;
+  stroke-width: 2;
+  opacity: 0.2;
+  -moz-transition: all 0.1s;
+  -o-transition: all 0.1s;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  cursor: pointer;
+  fill: none;
+}
+
 #tooltip-container {
   position: absolute;
   background-color: #fff;
@@ -223,10 +185,12 @@ rect:hover {
   border: 1px solid;
   display: none;
 }
+
 .tooltip_key {
   font-weight: bold;
 }
+
 .tooltip_value {
-  margin-left: 20px;
+  margin-left: 0px;
   float: right;
 }
