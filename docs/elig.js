@@ -16,7 +16,7 @@ d3.json("policyIndex.json", function(err,data) {
   var parseDate = d3.timeParse("%Y");
 
   data.forEach(function(d) { 
-    // console.log(d)
+
     d.date = parseDate(d.Year);
     d.snapIndex = +d["Unweighted Eligibility index"];       
   });
@@ -46,29 +46,13 @@ var lineStroke = "1.5px";
 var lineStrokeHover = "2.5px";
 
 
-// function getTimeDomain(data) {
-//   return data.reduce((acc, row) => {
-//     const epochTime = (new Date(row.date)).getTime();
-//     return {
-//       minVal: Math.min(epochTime, acc.minVal),
-//       maxVal: Math.max(epochTime, acc.maxVal),
-//       min: epochTime < acc.minVal ? row.date : acc.min,
-//       max: epochTime > acc.maxVal ? row.date : acc.max
-//     };
-//   }, {minVal: Infinity, maxVal: -Infinity, min: null, max: null});
-// }
-
-// const timeDomain = getTimeDomain(data);
 
 /* Scale */
 var xValue = function(d) { return new Date(d.date).getUTCFullYear()}, // data -> value
     xScale = d3.scaleTime().range([0,width]); 
-//d3.time.format("%b %Y") 
+
 xScale.domain([new Date('1993'), new Date('2016')]);
-// xScale = d3.scaleTime()
-//     .domain([d3.min(new Date(d.date).getUTCFullYear()), d3.max(new Date(Date(d.date).getUTCFullYear().max))])
-//     //.range([0,width]); 
-//xScale.domain([d3.min(data, xValue)+22, d3.max(data, xValue)+10]);
+
 
 var yScale = d3.scaleLinear()
   .domain([0, d3.max(data, d => d.snapIndex)])
@@ -98,9 +82,12 @@ lines.selectAll('.line-group')
   .data(Object.values(groupeddata)).enter()
   .append('g')
   .attr('class', 'line-group')  
+  .attr('statename-data', d => {
+    
+    return d[0]['State name'];
+  })
   .on("mouseover", function(d, i) {
-    console.log(d)
-   
+    
       svg.append("text")
         .attr("class", "title-text")
         //.attr("id", "hoverLabel")
@@ -176,8 +163,13 @@ svg.append("g")
   .attr("transform", "rotate(-90)")
   .attr("fill", "#000")
   .text("SNAP Eligibility index");
+
+
+svg.append("text")
+        .attr("x", 200)             
+        .attr("y", -30)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .text("SNAP Eligibility Index");
+
 });
-
-
-
-

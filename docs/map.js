@@ -35,6 +35,7 @@ d3.json("policyIndex.json", function(err, data) {
   var svg = d3.select("#canvas-svg").append("svg")
       .attr("width", width+"px")
       .attr("height", height+"px");
+
   
   d3.tsv("https://s3-us-west-2.amazonaws.com/vida-public/geo/us-state-names.tsv", function(error, names) {
   
@@ -59,8 +60,9 @@ var lineStroke = "1.5px";
 var lineStrokeHover = "2.5px";
 
 
-  d3.json("https://s3-us-west-2.amazonaws.com/vida-public/geo/us.json", function(error, us) {
 
+  d3.json("https://s3-us-west-2.amazonaws.com/vida-public/geo/us.json", function(error, us) {
+    
     svg.append("g")
         .attr("class", "states-choropleth")
         .selectAll("path")
@@ -71,15 +73,7 @@ var lineStrokeHover = "2.5px";
             return color(i);
         })
         .attr("d", path)
-      //   .on("mouseover", function() {
-      // d3.selectAll('.line-group .line')
-      //     $(this).attr('opacity', otherLinesOpacityHover);
-      
-    //   d3.select(this)
-    //     .attr('opacity', lineOpacityHover)
-    //     .attr("stroke-width", lineStrokeHover)
-    //     .style("cursor", "pointer");
-      // })
+
         .on("mousemove", function(d) {
 
             var html = "";
@@ -111,30 +105,21 @@ var lineStrokeHover = "2.5px";
                 .style("top", (d3.event.layerY + 15) + "px")
                 .style("left", (d3.event.layerX - tooltip_width - 30) + "px");
             }
-        //     d3.selectAll("line-group")
-        // .classed("pathLight", function(d,i) {
-        //   if ( d.district == activeDistrict) return true;
-        //   else return false;
-        // });
+        
         }).on("mouseover", function(d,i) {
 
-                    activeState = d[0]["State name"];
+                    activeState = id_name_map[d.id];
+                    d3.selectAll(".line-group")
+                    .attr('opacity', el => {
+                      return el[0]['State name'] === activeState ? 1 : 0})
+                    .attr("stroke-width", lineStrokeHover);
+                        
+        })
 
-                    selectAll("line")
-                    .classed("pathLight", function(d,i) {
-                        if ( d[i]["State name"]  == activeState) return true;
-                        else return false;
-                        });
-                    //console.log(activeState);
-                })
-
-        // .on("click",function(d){
-        //   d3.selectAll(".line-group .line")
-        //     // .classed("pathBase")
-        //     .attr('fill-opacity', '0')
-        // })
-
+        
         .on("mouseout", function() {
+          d3.selectAll('.line-group')
+            .attr('opacity', lineOpacityHover);
                 $(this).attr("fill-opacity", "1.0");
                 $("#tooltip-container").hide();
             });
@@ -143,8 +128,17 @@ var lineStrokeHover = "2.5px";
     svg.append("path")
         .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
         .attr("class", "states")
+        .attr("transform", "translate(" + 650 + "," - 950 - ")")
         .attr("transform", "scale(" + SCALE + ")")
         .attr("d", path);
+
+    svg.append("text")
+        .attr("x", 270)             
+        .attr("y", 20)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        //.style("text-decoration", "underline")  
+        .text("US State MAP");
   });
   
   });

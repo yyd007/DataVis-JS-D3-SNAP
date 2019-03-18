@@ -11,167 +11,167 @@
 // still working on the label, scale and axis
 
 
-d3.json("policyIndex.json", function(err,data) {
-  /* Format Data */
-  var parseDate = d3.timeParse("%Y");
+  d3.json("policyIndex.json", function(err,data) {
+    /* Format Data */
+    var parseDate = d3.timeParse("%Y");
 
-  data.forEach(function(d) { 
-    // console.log(d)
-    d.date = parseDate(d.Year);
-    d.snapIndex = +d["Unweighted SNAP policy index"];       
-  });
-
-
-  const groupeddata = data.reduce((acc, row) => {
-    if (!acc[row["State name"]]) {
-      acc[row["State name"]] = [];
-    }
-    acc[row["State name"]].push(row);
-    return acc;
-  }, {});
-  Object.keys(groupeddata).forEach(row => {
-    groupeddata[row].sort((a, b) => a["Year"] - b["Year"]);
-  })  
+    data.forEach(function(d) { 
+      // console.log(d)
+      d.date = parseDate(d.Year);
+      d.snapIndex = +d["Unweighted SNAP policy index"];       
+    });
 
 
-var width = 400;
-var height = 300;
-var margin = 50;
-var duration = 250;
-
-var lineOpacity = "0.25";
-var lineOpacityHover = "0.85";
-var otherLinesOpacityHover = "0.1";
-var lineStroke = "1.5px";
-var lineStrokeHover = "2.5px";
-
-
-// function getTimeDomain(data) {
-//   return data.reduce((acc, row) => {
-//     const epochTime = (new Date(row.date)).getTime();
-//     return {
-//       minVal: Math.min(epochTime, acc.minVal),
-//       maxVal: Math.max(epochTime, acc.maxVal),
-//       min: epochTime < acc.minVal ? row.date : acc.min,
-//       max: epochTime > acc.maxVal ? row.date : acc.max
-//     };
-//   }, {minVal: Infinity, maxVal: -Infinity, min: null, max: null});
-// }
-
-// const timeDomain = getTimeDomain(data);
-
-/* Scale */
-var xValue = function(d) { return new Date(d.date).getUTCFullYear()}, // data -> value
-    xScale = d3.scaleTime().range([0,width]); 
-//d3.time.format("%b %Y") 
-xScale.domain([new Date('1993'), new Date('2016')]);
-// xScale = d3.scaleTime()
-//     .domain([d3.min(new Date(d.date).getUTCFullYear()), d3.max(new Date(Date(d.date).getUTCFullYear().max))])
-//     //.range([0,width]); 
-//xScale.domain([d3.min(data, xValue)+22, d3.max(data, xValue)+10]);
-
-var yScale = d3.scaleLinear()
-  .domain([0, d3.max(data, d => d.snapIndex)])
-  .range([height-margin, 0]);
-
-var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-/* Add SVG */
-var svg = d3.select("#chart-svg").append("svg")
-  .attr("width", (width+margin)+"px")
-  .attr("height", (height+margin)+"px")
-  .append('g')
-  .attr("transform", `translate(${margin}, ${margin})`);
-
-/* Add line into SVG */
-var line = d3.line()
-  .x(d => xScale(d.date))
-  .y(d => {
-    return yScale(d.snapIndex)
-  });
+    const groupeddata = data.reduce((acc, row) => {
+      if (!acc[row["State name"]]) {
+        acc[row["State name"]] = [];
+      }
+      acc[row["State name"]].push(row);
+      return acc;
+    }, {});
+    Object.keys(groupeddata).forEach(row => {
+      groupeddata[row].sort((a, b) => a["Year"] - b["Year"]);
+    })  
 
 
-let lines = svg.append('g')
-  .attr('class', 'lines');
+    var width = 400;
+    var height = 300;
+    var margin = 50;
+    var duration = 250;
 
-lines.selectAll('.line-group')
-  .data(Object.values(groupeddata)).enter()
-  .append('g')
-  .attr('class', 'line-group')  
-  .on("mouseover", function(d, i) {
-    //console.log(d)
+    var lineOpacity = "0.25";
+    var lineOpacityHover = "0.85";
+    var otherLinesOpacityHover = "0.1";
+    var lineStroke = "1.5px";
+    var lineStrokeHover = "2.5px";
+
+
+
+    /* Scale */
+    var xValue = function(d) { return new Date(d.date).getUTCFullYear()}, // data -> value
+        xScale = d3.scaleTime().range([0,width]); 
+
+    xScale.domain([new Date('1993'), new Date('2016')]);
+
+    var yScale = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.snapIndex)])
+      .range([height-margin, 0]);
+
+    var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    /* Add SVG */
+    var svg = d3.select("#chart-svg").append("svg")
+      .attr("width", (width+margin)+"px")
+      .attr("height", (height+margin)+"px")
+      .append('g')
+      .attr("transform", `translate(${margin}, ${margin})`);
+
+    /* Add line into SVG */
+    var line = d3.line()
+      .x(d => xScale(d.date))
+      .y(d => {
+        return yScale(d.snapIndex)
+      });
+
+
+    let lines = svg.append('g')
+      .attr('class', 'lines');
+
+
+  lines.selectAll('.line-group')
+    .data(Object.values(groupeddata)).enter()
+    .append('g')
+    .attr('class', 'line-group')  
+    .on("mouseover", function(d, i) {
+
+    const thisState = d[0]['State name'];
     
       svg.append("text")
         .attr("class", "title-text")
-        //.attr("id", "hoverLabel")
         .attr("fill", color(i))        
         .text(d[0]["State name"])
         .attr("text-anchor", "start")
         .attr("x", (width-margin)/2+150)
         .attr("y", 50);
-    })
-
-  .on("mouseout", function(d) {
-      svg.select(".title-text").remove();
-      // d3.selectAll(".states")
-      //   .attr("class", "mapBase");
-    })
-  .append('path')
-  .attr('class', 'line')  
-  .attr('d', d => { 
-    return line(d)
-  })
-  .style('stroke', (d, i) => color(i))
-  .attr('opacity', lineOpacity)
-  .on("mouseover", function(d) {
-      d3.selectAll('.path .line').filter(function(d1){
-        return d[0]["State name"] == d1[0]["State name"]
-      })
-      .attr('opacity', otherLinesOpacityHover);
       
-      d3.select(this)
-        .attr('opacity', lineOpacityHover)
-        .attr("stroke-width", lineStrokeHover)
-        .style("cursor", "pointer");
+      d3.selectAll('.line-group')
+        .attr('opacity', el => {
+          return el[0]['State name'] === thisState ? 1 : 0;
+        })
     })
-  .on("mouseout", function(d) {
-      d3.selectAll(".line")
-          .attr('opacity', lineOpacity);
-    
-      d3.select(this)
-        .attr("stroke-width", lineStroke)
-        .style("cursor", "none");
-    });
 
-/* Add Axis into SVG */
-var xAxis = d3.axisBottom(xScale).tickFormat(function (d){
-  return d.getUTCFullYear();
-})
-              //.tickFormat(d3.time.format("%Y"));
 
-var yAxis = d3.axisLeft(yScale);
+    .on("mouseout", function(d) {
+      svg.select(".title-text").remove();
 
-svg.append("g")
-  .attr("class", "x axis")
-  .attr("transform", `translate(0, ${height-margin})`)
-  .call(xAxis)
-  .append('text') 
-  .attr("x",380)
-  .attr("y", -8)
-  .attr("fill", "#000")
-  .text("Year");
+      
+      d3.selectAll('.line-group')
+        .attr('opacity', lineOpacityHover);
+          })
+        .append('path')
+        .attr('class', 'line')  
+        .attr('d', d => { 
+          return line(d)
+        })
+        .style('stroke', (d, i) => color(i))
+        .attr('opacity', lineOpacity)
 
-  
-svg.append("g")
-  .attr("class", "y axis")
-  .call(yAxis)
-  .append('text')
-  .attr("y", 15)
-  .attr("transform", "rotate(-90)")
-  .attr("fill", "#000")
-  .text("SNAP Policy Index");
+        .on("mouseover", function(d) {
+            d3.selectAll('.path .line').filter(function(d1){
+              return d[0]["State name"] == d1[0]["State name"]
+            })
+            //.attr('opacity', otherLinesOpacityHover);
+            
+            d3.select(this)
+              .attr('opacity', lineOpacityHover)
+              .attr("stroke-width", lineStrokeHover)
+              .style("cursor", "pointer");
+          })
+
+        .on("mouseout", function(d) {
+            d3.selectAll(".line")
+                .attr('opacity', lineOpacity);
+          
+            d3.select(this)
+              .attr("stroke-width", lineStroke)
+              .style("cursor", "none");
+          });
+
+        /* Add Axis into SVG */
+        var xAxis = d3.axisBottom(xScale).tickFormat(function (d){
+          return d.getUTCFullYear();
+        })
+                
+
+        var yAxis = d3.axisLeft(yScale);
+
+        svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", `translate(0, ${height-margin})`)
+          .call(xAxis)
+          .append('text')
+          .attr("x",380)
+          .attr("y", -8)
+          .attr("fill", "#000")
+          .text("Year");
+
+          
+        svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxis)
+          .append('text')
+          .attr("y", 15)
+          .attr("transform", "rotate(-90)")
+          .attr("fill", "#000")
+          .text("SNAP Policy Index");
+        
+      
+      svg.append("text")
+        .attr("x", 200)             
+        .attr("y", -30)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .text("SNAP Policy Index");
+
 });
-
-
-
 

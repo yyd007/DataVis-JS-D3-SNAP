@@ -8,7 +8,6 @@
 //https://codepen.io/zakariachowdhury/pen/JEmjwq
 //https://bl.ocks.org
 
-// still working on the label, scale and axis
 
 
 d3.json("policyIndex.json", function(err,data) {
@@ -47,29 +46,13 @@ var lineStroke = "1.5px";
 var lineStrokeHover = "2.5px";
 
 
-// function getTimeDomain(data) {
-//   return data.reduce((acc, row) => {
-//     const epochTime = (new Date(row.date)).getTime();
-//     return {
-//       minVal: Math.min(epochTime, acc.minVal),
-//       maxVal: Math.max(epochTime, acc.maxVal),
-//       min: epochTime < acc.minVal ? row.date : acc.min,
-//       max: epochTime > acc.maxVal ? row.date : acc.max
-//     };
-//   }, {minVal: Infinity, maxVal: -Infinity, min: null, max: null});
-// }
-
-// const timeDomain = getTimeDomain(data);
 
 /* Scale */
 var xValue = function(d) { return new Date(d.date).getUTCFullYear()}, // data -> value
     xScale = d3.scaleTime().range([0,width]); 
 //d3.time.format("%b %Y") 
 xScale.domain([new Date('1993'), new Date('2016')]);
-// xScale = d3.scaleTime()
-//     .domain([d3.min(new Date(d.date).getUTCFullYear()), d3.max(new Date(Date(d.date).getUTCFullYear().max))])
-//     //.range([0,width]); 
-//xScale.domain([d3.min(data, xValue)+22, d3.max(data, xValue)+10]);
+
 
 var yScale = d3.scaleLinear()
   .domain([0, d3.max(data, d => d.snapIndex)])
@@ -101,7 +84,7 @@ lines.selectAll('.line-group')
   .append('g')
   .attr('class', 'line-group')  
   .on("mouseover", function(d, i) {
-    console.log(d)
+
     
       svg.append("text")
         .attr("class", "title-text")
@@ -112,19 +95,11 @@ lines.selectAll('.line-group')
         .attr("x", (width-margin)/2+150)
         .attr("y", 50);
 
-//link to map 
-
-        // d3.selectAll(".states")
-        // .classed("mapLight", function(d,i) {
-        //   if ( d.district == activeDistrict) return true;
-        //   else return false;
-        // });
     })
 
   .on("mouseout", function(d) {
       svg.select(".title-text").remove();
-      // d3.selectAll(".states")
-      //   .attr("class", "mapBase");
+      
     })
   .append('path')
   .attr('class', 'line')  
@@ -155,7 +130,7 @@ lines.selectAll('.line-group')
 var xAxis = d3.axisBottom(xScale).tickFormat(function (d){
   return d.getUTCFullYear();
 })
-              //.tickFormat(d3.time.format("%Y"));
+              
 
 var yAxis = d3.axisLeft(yScale);
 
@@ -178,8 +153,15 @@ svg.append("g")
   .attr("transform", "rotate(-90)")
   .attr("fill", "#000")
   .text("SNAP Transaction Cost index");
+
+
+
+svg.append("text")
+        .attr("x", 200)             
+        .attr("y", -30)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .text("SNAP Transaction Cost Index");
+
 });
-
-
-
 
