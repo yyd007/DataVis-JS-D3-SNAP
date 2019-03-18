@@ -10,14 +10,13 @@ d3.json("policyIndex.json", function(err, data) {
 
   var config = {"color1":"#efebe6","color2":"#ef8f21","stateDataColumn":"State name","valueDataColumn":"Weighted SNAP policy index"}
   
-  var WIDTH = 800, HEIGHT = 500;
-  var color = d3.scale.log()
-    .range(["#efebe6", "#ef8f21"])
-    .interpolate(d3.interpolateHcl);
+  var WIDTH = 200, HEIGHT = 100;
+  
+  var color = d3.scaleOrdinal(d3.schemeCategory10);
 
   var COLOR_COUNTS = 9;
   
-  var SCALE = 0.7;
+  var SCALE = 0.56;
   
   function valueFormat(d) {
       return d;  
@@ -30,18 +29,12 @@ d3.json("policyIndex.json", function(err, data) {
       height = HEIGHT;
   
   var valueById = d3.map();
-  
-  
-  var quantize = d3.scale.quantize()
-      .domain([0, 1.0])
-      .range(d3.range(COLOR_COUNTS).map(function(i) { return i }));
-  
-  var path = d3.geo.path();
-  
-  var svg = d3.select("#canvas-svg").append("svg")
-      .attr("width", width)
-      .attr("height", height);
+  const projection = d3.geoAlbersUsa().scale(1000);//.center([-123, 45]);  
+  var path = d3.geoPath(projection);
 
+  var svg = d3.select("#canvas-svg").append("svg")
+      .attr("width", width+"px")
+      .attr("height", height+"px");
   
   d3.tsv("https://s3-us-west-2.amazonaws.com/vida-public/geo/us-state-names.tsv", function(error, names) {
   
@@ -58,26 +51,37 @@ d3.json("policyIndex.json", function(err, data) {
     valueById.set(id); 
   });
 
-  
+ 
+ var lineOpacity = "0.25";
+var lineOpacityHover = "0.85";
+var otherLinesOpacityHover = "0.1";
+var lineStroke = "1.5px";
+var lineStrokeHover = "2.5px";
+
 
   d3.json("https://s3-us-west-2.amazonaws.com/vida-public/geo/us.json", function(error, us) {
+
     svg.append("g")
         .attr("class", "states-choropleth")
-      .selectAll("path")
+        .selectAll("path")
         .data(topojson.feature(us, us.objects.states).features)
-      .enter().append("path")
+        .enter().append("path")
         .attr("transform", "scale(" + SCALE + ")")
-        .style("fill", function(d) {
-          if (valueById.get(d.id)) {
-            var i = quantize(valueById.get(d.id));
-          
-            return color;
-          } else {
-            return "";
-          }
+        .attr("fill", function(d,i) {
+            return color(i);
         })
         .attr("d", path)
+      //   .on("mouseover", function() {
+      // d3.selectAll('.line-group .line')
+      //     $(this).attr('opacity', otherLinesOpacityHover);
+      
+    //   d3.select(this)
+    //     .attr('opacity', lineOpacityHover)
+    //     .attr("stroke-width", lineStrokeHover)
+    //     .style("cursor", "pointer");
+      // })
         .on("mousemove", function(d) {
+
             var html = "";
   
             html += "<div class=\"tooltip_kv\">";
@@ -95,7 +99,6 @@ d3.json("policyIndex.json", function(err, data) {
             $("#tooltip-container").show();
             
             var coordinates = d3.mouse(this);
-            
             var map_width = $('.states-choropleth')[0].getBoundingClientRect().width;
             
             if (d3.event.layerX < map_width / 2) {
@@ -108,12 +111,35 @@ d3.json("policyIndex.json", function(err, data) {
                 .style("top", (d3.event.layerY + 15) + "px")
                 .style("left", (d3.event.layerX - tooltip_width - 30) + "px");
             }
-        })
+        //     d3.selectAll("line-group")
+        // .classed("pathLight", function(d,i) {
+        //   if ( d.district == activeDistrict) return true;
+        //   else return false;
+        // });
+        }).on("mouseover", function(d,i) {
+
+                    activeState = d[0]["State name"];
+
+                    selectAll("line")
+                    .classed("pathLight", function(d,i) {
+                        if ( d[i]["State name"]  == activeState) return true;
+                        else return false;
+                        });
+                    //console.log(activeState);
+                })
+
+        // .on("click",function(d){
+        //   d3.selectAll(".line-group .line")
+        //     // .classed("pathBase")
+        //     .attr('fill-opacity', '0')
+        // })
+
         .on("mouseout", function() {
                 $(this).attr("fill-opacity", "1.0");
                 $("#tooltip-container").hide();
             });
-  
+
+ 
     svg.append("path")
         .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
         .attr("class", "states")
@@ -123,3 +149,5 @@ d3.json("policyIndex.json", function(err, data) {
   
   });
 });
+
+

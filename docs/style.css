@@ -1,10 +1,14 @@
 /* stylesheet for custom graph */
 
+
+/*path:hover {
+  stroke-width: 5 !important;
+}*/
 body {
   background-color: #fff;
   font-family: "adelle-1","adelle-2", constantia, cambria, Georgia, serif;
   font-size:14px;
-  margin: 18px 0 0 30px;
+  margin: 50px 0 0 150px;
 }
 
 h1 {
@@ -23,24 +27,27 @@ p {
   color: #808080;
 }
 
-
-
+svg {
+      width:50%;
+      height:400px;
+      float: left;
+    }
 
 g.linklight path{
   stroke: #ff0000;
-  opacity: 1;
+  /*opacity: 1;*/
 }
 
 g.highlight path {
   stroke: #cfa63e;
   stroke-width: 4;
-  opacity: 1;
+  /*opacity*/: 1;
 }
 
 g.national path {
   stroke: #5387bd;
   stroke-width: 4;
-  opacity: 1;
+  /*opacity*/: 1;
 }
 
 
@@ -63,12 +70,12 @@ g.national path {
 
 .pathBase {
   stroke: #888;
-  opacity: 0.2;
+  /*opacity: 0.2;*/
 }
 
 .pathLight {
   stroke: black;
-  opacity: 1;
+  /*opacity: 1;*/
 }
   
 #hoverlabel {
@@ -107,7 +114,17 @@ g.national path {
   text-anchor: start;
 }
 
+.mapLight{
+  opacity: 1;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
 
+.mapBase{
+  opacity: 0;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
 
 .path.active {
   stroke: black;

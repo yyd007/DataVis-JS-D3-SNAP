@@ -18,7 +18,8 @@ d3.json("policyIndex.json", function(err,data) {
   data.forEach(function(d) { 
     // console.log(d)
     d.date = parseDate(d.Year);
-    d.snapIndex = +d["Unweighted SNAP policy index"];       
+
+    d.snapIndex = +d["Unweighted Transaction Cost index"];       
   });
 
 
@@ -90,6 +91,7 @@ var line = d3.line()
     return yScale(d.snapIndex)
   });
 
+var activeDistrict; // Will be used for linked hovering
 
 let lines = svg.append('g')
   .attr('class', 'lines');
@@ -99,7 +101,7 @@ lines.selectAll('.line-group')
   .append('g')
   .attr('class', 'line-group')  
   .on("mouseover", function(d, i) {
-    //console.log(d)
+    console.log(d)
     
       svg.append("text")
         .attr("class", "title-text")
@@ -109,6 +111,14 @@ lines.selectAll('.line-group')
         .attr("text-anchor", "start")
         .attr("x", (width-margin)/2+150)
         .attr("y", 50);
+
+//link to map 
+
+        // d3.selectAll(".states")
+        // .classed("mapLight", function(d,i) {
+        //   if ( d.district == activeDistrict) return true;
+        //   else return false;
+        // });
     })
 
   .on("mouseout", function(d) {
@@ -124,10 +134,8 @@ lines.selectAll('.line-group')
   .style('stroke', (d, i) => color(i))
   .attr('opacity', lineOpacity)
   .on("mouseover", function(d) {
-      d3.selectAll('.path .line').filter(function(d1){
-        return d[0]["State name"] == d1[0]["State name"]
-      })
-      .attr('opacity', otherLinesOpacityHover);
+      d3.selectAll('.line')
+          .attr('opacity', otherLinesOpacityHover);
       
       d3.select(this)
         .attr('opacity', lineOpacityHover)
@@ -169,7 +177,7 @@ svg.append("g")
   .attr("y", 15)
   .attr("transform", "rotate(-90)")
   .attr("fill", "#000")
-  .text("SNAP Policy Index");
+  .text("SNAP Transaction Cost index");
 });
 
 
