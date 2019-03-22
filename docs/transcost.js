@@ -80,83 +80,96 @@ let lines = svg.append('g')
   .attr('class', 'lines');
 
 lines.selectAll('.line-group')
-  .data(Object.values(groupeddata)).enter()
-  .append('g')
-  .attr('class', 'line-group')  
-  .on("mouseover", function(d, i) {
+    .data(Object.values(groupeddata)).enter()
+    .append('g')
+    .attr('class', 'line-group')  
+    .on("mouseover", function(d, i) {
 
+    const thisState = d[0]['State name'];
     
       svg.append("text")
         .attr("class", "title-text")
-        //.attr("id", "hoverLabel")
         .attr("fill", color(i))        
         .text(d[0]["State name"])
         .attr("text-anchor", "start")
         .attr("x", (width-margin)/2+150)
         .attr("y", 50);
-
+      
+      d3.selectAll('.line-group')
+        .attr('opacity', el => {
+          return el[0]['State name'] === thisState ? 1 : 0;
+        })
     })
 
-  .on("mouseout", function(d) {
+
+    .on("mouseout", function(d) {
       svg.select(".title-text").remove();
+
       
-    })
-  .append('path')
-  .attr('class', 'line')  
-  .attr('d', d => { 
-    return line(d)
-  })
-  .style('stroke', (d, i) => color(i))
-  .attr('opacity', lineOpacity)
-  .on("mouseover", function(d) {
-      d3.selectAll('.line')
-          .attr('opacity', otherLinesOpacityHover);
+      d3.selectAll('.line-group')
+        .attr('opacity', lineOpacityHover);
+          })
+
+
+        .append('path')
+        .attr('class', 'line')  
+        .attr('d', d => { 
+          return line(d)
+        })
+        .style('stroke', (d, i) => color(i))
+        .attr('opacity', lineOpacity)
+
+        .on("mouseover", function(d) {
+            d3.selectAll('.path .line').filter(function(d1){
+              return d[0]["State name"] == d1[0]["State name"]
+            })
+            .attr('opacity', otherLinesOpacityHover);
+            
+            d3.select(this)
+              .attr('opacity', lineOpacityHover)
+              .attr("stroke-width", lineStrokeHover)
+              .style("cursor", "pointer");
+          })
+
+        .on("mouseout", function(d) {
+            d3.selectAll(".line")
+                .attr('opacity', lineOpacity);
+          
+            d3.select(this)
+              .attr("stroke-width", lineStroke)
+              .style("cursor", "none");
+          });
+
+        /* Add Axis into SVG */
+        var xAxis = d3.axisBottom(xScale).tickFormat(function (d){
+          return d.getUTCFullYear();
+        })
+                
+
+        var yAxis = d3.axisLeft(yScale);
+
+        svg.append("g")
+          .attr("class", "x-axis")
+          .attr("transform", `translate(0, ${height-margin})`)
+          .call(xAxis)
+          .append('text')
+          .attr("x",380)
+          .attr("y", -8)
+          .attr("fill", "#000")
+          .text("Year");
+
+          
+        svg.append("g")
+          .attr("class", "y-axis")
+          .call(yAxis)
+          .append('text')
+          .attr("y", 15)
+          .attr("transform", "rotate(-90)")
+          .attr("fill", "#000")
+          .text("SNAP Policy Index");
+        
       
-      d3.select(this)
-        .attr('opacity', lineOpacityHover)
-        .attr("stroke-width", lineStrokeHover)
-        .style("cursor", "pointer");
-    })
-  .on("mouseout", function(d) {
-      d3.selectAll(".line")
-          .attr('opacity', lineOpacity);
-    
-      d3.select(this)
-        .attr("stroke-width", lineStroke)
-        .style("cursor", "none");
-    });
-
-/* Add Axis into SVG */
-var xAxis = d3.axisBottom(xScale).tickFormat(function (d){
-  return d.getUTCFullYear();
-})
-              
-
-var yAxis = d3.axisLeft(yScale);
-
-svg.append("g")
-  .attr("class", "x axis")
-  .attr("transform", `translate(0, ${height-margin})`)
-  .call(xAxis)
-  .append('text') 
-  .attr("x",380)
-  .attr("y", -8)
-  .attr("fill", "#000")
-  .text("Year");
-
-  
-svg.append("g")
-  .attr("class", "y axis")
-  .call(yAxis)
-  .append('text')
-  .attr("y", 15)
-  .attr("transform", "rotate(-90)")
-  .attr("fill", "#000")
-  .text("SNAP Transaction Cost index");
-
-
-
-svg.append("text")
+      svg.append("text")
         .attr("x", 200)             
         .attr("y", -30)
         .attr("text-anchor", "middle")  

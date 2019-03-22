@@ -112,8 +112,7 @@ var lineStrokeHover = "2.5px";
                     d3.selectAll(".line-group")
                     .attr('opacity', el => {
                       return el[0]['State name'] === activeState ? 1 : 0})
-                    .attr("stroke-width", lineStrokeHover);
-                        
+                    .attr("stroke-width", lineStrokeHover);                       
         })
 
         
@@ -124,7 +123,7 @@ var lineStrokeHover = "2.5px";
                 $("#tooltip-container").hide();
             });
 
- 
+
     svg.append("path")
         .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
         .attr("class", "states")

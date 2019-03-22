@@ -8,7 +8,7 @@
 //https://codepen.io/zakariachowdhury/pen/JEmjwq
 //https://bl.ocks.org
 
-// still working on the label, scale and axis
+
 
 
 d3.json("policyIndex.json", function(err,data) {
@@ -79,93 +79,96 @@ let lines = svg.append('g')
   .attr('class', 'lines');
 
 lines.selectAll('.line-group')
-  .data(Object.values(groupeddata)).enter()
-  .append('g')
-  .attr('class', 'line-group')  
-  .attr('statename-data', d => {
-    
-    return d[0]['State name'];
-  })
-  .on("mouseover", function(d, i) {
+    .data(Object.values(groupeddata)).enter()
+    .append('g')
+    .attr('class', 'line-group')  
+    .on("mouseover", function(d, i) {
+
+    const thisState = d[0]['State name'];
     
       svg.append("text")
         .attr("class", "title-text")
-        //.attr("id", "hoverLabel")
         .attr("fill", color(i))        
         .text(d[0]["State name"])
         .attr("text-anchor", "start")
         .attr("x", (width-margin)/2+150)
         .attr("y", 50);
-
-//link to map 
-
-        // d3.selectAll(".states")
-        // .classed("mapLight", function(d,i) {
-        //   if ( d.district == activeDistrict) return true;
-        //   else return false;
-        // });
-    })
-
-  .on("mouseout", function(d) {
-      svg.select(".title-text").remove();
-      // d3.selectAll(".states")
-      //   .attr("class", "mapBase");
-    })
-  .append('path')
-  .attr('class', 'line')  
-  .attr('d', d => { 
-    return line(d)
-  })
-  .style('stroke', (d, i) => color(i))
-  .attr('opacity', lineOpacity)
-  .on("mouseover", function(d) {
-      d3.selectAll('.line')
-          .attr('opacity', otherLinesOpacityHover);
       
-      d3.select(this)
-        .attr('opacity', lineOpacityHover)
-        .attr("stroke-width", lineStrokeHover)
-        .style("cursor", "pointer");
+      d3.selectAll('.line-group')
+        .attr('opacity', el => {
+          return el[0]['State name'] === thisState ? 1 : 0;
+        })
     })
-  .on("mouseout", function(d) {
-      d3.selectAll(".line")
-          .attr('opacity', lineOpacity);
-    
-      d3.select(this)
-        .attr("stroke-width", lineStroke)
-        .style("cursor", "none");
-    });
-
-/* Add Axis into SVG */
-var xAxis = d3.axisBottom(xScale).tickFormat(function (d){
-  return d.getUTCFullYear();
-})
-              //.tickFormat(d3.time.format("%Y"));
-
-var yAxis = d3.axisLeft(yScale);
-
-svg.append("g")
-  .attr("class", "x axis")
-  .attr("transform", `translate(0, ${height-margin})`)
-  .call(xAxis)
-  .append('text') 
-  .attr("x",380)
-  .attr("y", -8)
-  .attr("fill", "#000")
-  .text("Year");
-
-  
-svg.append("g")
-  .attr("class", "y axis")
-  .call(yAxis)
-  .append('text')
-  .attr("y", 15)
-  .attr("transform", "rotate(-90)")
-  .attr("fill", "#000")
-  .text("SNAP Eligibility index");
 
 
-svg.append("text")
+    .on("mouseout", function(d) {
+      svg.select(".title-text").remove();
+
+      
+      d3.selectAll('.line-group')
+        .attr('opacity', lineOpacityHover);
+          })
+
+
+        .append('path')
+        .attr('class', 'line')  
+        .attr('d', d => { 
+          return line(d)
+        })
+        .style('stroke', (d, i) => color(i))
+        .attr('opacity', lineOpacity)
+
+        .on("mouseover", function(d) {
+            d3.selectAll('.path .line').filter(function(d1){
+              return d[0]["State name"] == d1[0]["State name"]
+            })
+            .attr('opacity', otherLinesOpacityHover);
+            
+            d3.select(this)
+              .attr('opacity', lineOpacityHover)
+              .attr("stroke-width", lineStrokeHover)
+              .style("cursor", "pointer");
+          })
+
+        .on("mouseout", function(d) {
+            d3.selectAll(".line")
+                .attr('opacity', lineOpacity);
+          
+            d3.select(this)
+              .attr("stroke-width", lineStroke)
+              .style("cursor", "none");
+          });
+
+        /* Add Axis into SVG */
+        var xAxis = d3.axisBottom(xScale).tickFormat(function (d){
+          return d.getUTCFullYear();
+        })
+                
+
+        var yAxis = d3.axisLeft(yScale);
+
+        svg.append("g")
+          .attr("class", "x-axis")
+          .attr("transform", `translate(0, ${height-margin})`)
+          .call(xAxis)
+          .append('text')
+          .attr("x",380)
+          .attr("y", -8)
+          .attr("fill", "#000")
+          .text("Year");
+
+          
+        svg.append("g")
+          .attr("class", "y-axis")
+          .call(yAxis)
+          .append('text')
+          .attr("y", 15)
+          .attr("transform", "rotate(-90)")
+          .attr("fill", "#000")
+          .text("SNAP Policy Index");
+        
+      
+      svg.append("text")
         .attr("x", 200)             
         .attr("y", -30)
         .attr("text-anchor", "middle")  
@@ -173,3 +176,4 @@ svg.append("text")
         .text("SNAP Eligibility Index");
 
 });
+

@@ -1,14 +1,14 @@
 /* stylesheet for custom graph */
+/*References:
+//https://bl.ocks.org*/
 
 
-/*path:hover {
-  stroke-width: 5 !important;
-}*/
 body {
   background-color: #fff;
   font-family: "adelle-1","adelle-2", constantia, cambria, Georgia, serif;
   font-size:14px;
   margin: 50px 0 0 150px;
+  padding-bottom: 100px;
 }
 
 h1 {
@@ -24,32 +24,37 @@ h2 {
 }
 
 p {
+  font-weight: normal;
   color: #808080;
+  margin: 0px;
+  margin-right: 150px;
+  padding-bottom: 10px;
+  font-size: 16px;
 }
 
 svg {
-      width:50%;
+      width:49%;
       height:400px;
       float: left;
     }
 
-g.linklight path{
+/*g.linklight path{
   stroke: #ff0000;
-  /*opacity: 1;*/
+  opacity: 1;
 }
 
 g.highlight path {
   stroke: #cfa63e;
   stroke-width: 4;
-  /*opacity*/: 1;
+  opacity: 1;
 }
 
 g.national path {
   stroke: #5387bd;
   stroke-width: 4;
-  /*opacity*/: 1;
+  opacity: 1;
 }
-
+*/
 
 .axis path,
 .axis line {
@@ -88,7 +93,7 @@ g.national path {
     
 .axis text {
   font-family: "ff-nuvo-sc-web-pro-1","ff-nuvo-sc-web-pro-2", sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   letter-spacing: 0.5px;
 }
 
@@ -131,29 +136,7 @@ g.national path {
   opacity: 1;
 }
 
-/* Bar specific CSS */
 
-rect:hover {
-  fill: #2E2E31;
-}
-
-.barBase {  
-  fill: #5288BE;
-}
-
-.barLight {
-  fill: #2E2E31;
-}         
-
-.axisBar text {
-  font-family: "ff-nuvo-sc-web-pro-1","ff-nuvo-sc-web-pro-2", sans-serif;
-  font-size: 11px;
-}
-
-.axisBarTitle {
-  font-family: "ff-nuvo-sc-web-pro-1","ff-nuvo-sc-web-pro-2", sans-serif;
-  font-size: 12px;
-}
 
 .y.axisBar path,
 .y.axisBar line {
@@ -167,10 +150,7 @@ rect:hover {
   cursor: auto;
 }
 
-.barlabel {
-  font-family: "ff-nuvo-sc-web-pro-1","ff-nuvo-sc-web-pro-2", sans-serif;
-  font-size:11px;
-}
+
 
 .states {
   fill: none;
@@ -185,8 +165,8 @@ rect:hover {
 .line {
   stroke: #ccc;
   stroke-width: 2;
-  opacity: 0.2;
-  -moz-transition: all 0.1s;
+/*  opacity: 0.2;
+*/  -moz-transition: all 0.1s;
   -o-transition: all 0.1s;
   -webkit-transition: all 0.1s;
   transition: all 0.1s;
@@ -210,4 +190,45 @@ rect:hover {
 .tooltip_value {
   margin-left: 0px;
   float: right;
+}
+
+
+/*learned from Justin Cohler's github
+*/
+.instruction {
+  position: relative;
+}
+
+.instruction span {
+  font-size: 14px;
+  margin-top: 20px;
+  display: none;
+  position: absolute;
+  width: 200px;
+  padding: 5px;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.6);
+  border: 0px solid rgba(0, 0, 0, 0.6);
+  color: #edf3f7;
+  -moz-border-radius: 5px;
+  /* this works only in camino/firefox */
+  -webkit-border-radius: 5px;
+  /* this is just for Safari */
+}
+
+.instruction span:before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid rgba(0, 0, 0, 0.6);
+  left: 8px;
+  top: -7px;
+}
+
+.instruction span {
+  display: block;
 }

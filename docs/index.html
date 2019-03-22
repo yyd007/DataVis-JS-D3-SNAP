@@ -19,8 +19,9 @@
 
 <h1>A Geographical Profile on SNAP Policy Index Change 1996 - 2014</h1>
 <body style="background-color:white;">
-<div class="container">
-<div id="tooltip-container"></div>
+ <div class="container">
+ <div id="tooltip-container"></div>
+ <div id="toolbar_instruction"></div>
 
 
 <div id="canvas-svg"></div>
@@ -30,8 +31,8 @@
 <div id="transcost-svg"></div>
 </div>
 
-<!-- <div id="footer">Source:</div>
- -->
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js"></script>
@@ -50,7 +51,30 @@
 <!-- <h4>SNAP Transaction Cost Index</h4> -->
 <script src="transcost.js"></script>
 
-
+<script src="instruction.js"></script>
 </body>
 
+<div>
+	<h2>
+		Background
+	</h2>
+	<p>
+		This project uses the SNAP Policy Database from the USDA Economic Research Services, which provides a central data source for information on State policy options in the Supplemental Nutrition Assistance Program (SNAP) from year 1996 to 2014. 
+	</p>
+	<p>
+		The Policy Index is calculated by program access index, which measures the degree to which low-income people have access to SNAP benefits. The higher the Policy Index is, the more accessible SNAP is to the people in the state.
+	</p>
+	<p>
+		The Eligibility Index is composed of all the eligibility measurements that indicate how eligible each participant is to the SNAP program. The higher the index, more people can meet the eligibility requirement, and hence the more accessible the program is towards the participants. 
+	</p>
+	<p>
+		The Transaction Costs generally refer to the time and money spent establishing and maintaining eligibility. The higher the Transaction Cost Index is, the more effort is being put into the program.
+ 	</p>
+
+	<p></p><p></p>
+	<p>
+		Overall, we can see that the SNAP program accessiblity in all the states is improving over the years.
+	</p><p></p><p></p></p><p></p><p></p>
+</div>
+<div id="footer">Source: USDA Economic Research Services</div>
 

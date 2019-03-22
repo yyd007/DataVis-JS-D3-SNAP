@@ -8,7 +8,6 @@
 //https://codepen.io/zakariachowdhury/pen/JEmjwq
 //https://bl.ocks.org
 
-// still working on the label, scale and axis
 
 
   d3.json("policyIndex.json", function(err,data) {
@@ -16,7 +15,7 @@
     var parseDate = d3.timeParse("%Y");
 
     data.forEach(function(d) { 
-      // console.log(d)
+
       d.date = parseDate(d.Year);
       d.snapIndex = +d["Unweighted SNAP policy index"];       
     });
@@ -95,7 +94,7 @@
         .attr("y", 50);
       
       d3.selectAll('.line-group')
-        .attr('opacity', el => {
+        .attr('opacity', function(el) {
           return el[0]['State name'] === thisState ? 1 : 0;
         })
     })
@@ -103,11 +102,12 @@
 
     .on("mouseout", function(d) {
       svg.select(".title-text").remove();
-
       
       d3.selectAll('.line-group')
         .attr('opacity', lineOpacityHover);
           })
+
+
         .append('path')
         .attr('class', 'line')  
         .attr('d', d => { 
@@ -117,11 +117,11 @@
         .attr('opacity', lineOpacity)
 
         .on("mouseover", function(d) {
-            d3.selectAll('.path .line').filter(function(d1){
-              return d[0]["State name"] == d1[0]["State name"]
-            })
-            //.attr('opacity', otherLinesOpacityHover);
-            
+            // d3.selectAll('.path .line')
+            // .attr('opacity', lineOpacityHover);
+            // .filter(function(d1){
+            //   return d[0]["State name"] === d1[0]["State name"];
+                                               
             d3.select(this)
               .attr('opacity', lineOpacityHover)
               .attr("stroke-width", lineStrokeHover)
@@ -146,7 +146,7 @@
         var yAxis = d3.axisLeft(yScale);
 
         svg.append("g")
-          .attr("class", "x axis")
+          .attr("class", "x-axis")
           .attr("transform", `translate(0, ${height-margin})`)
           .call(xAxis)
           .append('text')
@@ -157,7 +157,7 @@
 
           
         svg.append("g")
-          .attr("class", "y axis")
+          .attr("class", "y-axis")
           .call(yAxis)
           .append('text')
           .attr("y", 15)
