@@ -5,6 +5,7 @@
 
 body {
   background-color: #fff;
+  color: #636161;
   font-family: "adelle-1","adelle-2", constantia, cambria, Georgia, serif;
   font-size:14px;
   margin: 50px 0 0 150px;
@@ -38,23 +39,6 @@ svg {
       float: left;
     }
 
-/*g.linklight path{
-  stroke: #ff0000;
-  opacity: 1;
-}
-
-g.highlight path {
-  stroke: #cfa63e;
-  stroke-width: 4;
-  opacity: 1;
-}
-
-g.national path {
-  stroke: #5387bd;
-  stroke-width: 4;
-  opacity: 1;
-}
-*/
 
 .axis path,
 .axis line {
@@ -75,12 +59,12 @@ g.national path {
 
 .pathBase {
   stroke: #888;
-  /*opacity: 0.2;*/
+  
 }
 
 .pathLight {
   stroke: black;
-  /*opacity: 1;*/
+  
 }
   
 #hoverlabel {

@@ -6,7 +6,7 @@ window.addEventListener("load", function () {
 
         setTimeout(() => resolve(), 500);
 
-    }).then(function () { // (**)
+    }).then(function () { 
 
         console.log("step 1");
         d3.select("#canvas-svg")

@@ -1,7 +1,6 @@
 // Learned from and References:
 //revised from
 // https://bl.ocks.org/mbostock/6320825
-// https://bl.ocks.org/mbostock/6320825
 // https://plot.ly/javascript/choropleth-maps/
 
 
@@ -12,7 +11,7 @@ d3.json("policyIndex.json", function(err, data) {
   
   var WIDTH = 200, HEIGHT = 100;
   
-  var color = d3.scaleOrdinal(d3.schemeCategory10);
+  var color = d3.scaleOrdinal(d3.schemeCategory20);
 
   var COLOR_COUNTS = 9;
   
@@ -70,7 +69,7 @@ var lineStrokeHover = "2.5px";
         .enter().append("path")
         .attr("transform", "scale(" + SCALE + ")")
         .attr("fill", function(d,i) {
-            return color(i);
+            return color(id_name_map[d.id]);
         })
         .attr("d", path)
 
@@ -136,7 +135,6 @@ var lineStrokeHover = "2.5px";
         .attr("y", 20)
         .attr("text-anchor", "middle")  
         .style("font-size", "16px") 
-        //.style("text-decoration", "underline")  
         .text("US State MAP");
   });
   

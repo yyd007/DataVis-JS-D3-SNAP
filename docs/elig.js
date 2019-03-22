@@ -51,14 +51,14 @@ var lineStrokeHover = "2.5px";
 var xValue = function(d) { return new Date(d.date).getUTCFullYear()}, // data -> value
     xScale = d3.scaleTime().range([0,width]); 
 
-xScale.domain([new Date('1993'), new Date('2016')]);
+xScale.domain([new Date('1996'), new Date('2016')]);
 
 
 var yScale = d3.scaleLinear()
   .domain([0, d3.max(data, d => d.snapIndex)])
   .range([height-margin, 0]);
 
-var color = d3.scaleOrdinal(d3.schemeCategory10);
+var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 /* Add SVG */
 var svg = d3.select("#chart-svg").append("svg")
